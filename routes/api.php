@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\SellerAuthController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Controllers\API\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,10 @@ Route::prefix('seller')->group(function () {
     })->middleware(['auth:sanctum', 'signed'])->name('verification.verify');
 });
 
+Route::middleware(['auth:sanctum', 'verified'])->prefix('seller')->group(function () {
+    Route::get('/products', [SellerAuthController::class, 'viewProducts']);
+    Route::post('/orders', [OrderController::class, 'store']);
+});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

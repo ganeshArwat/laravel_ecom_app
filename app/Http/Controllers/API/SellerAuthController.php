@@ -11,6 +11,7 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Carbon;
 use App\Models\Seller;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Product;
 
 class SellerAuthController extends Controller
 {
@@ -89,5 +90,16 @@ class SellerAuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Logged out successfully.']);
+    }
+
+    public function viewProducts()
+    {
+        $products = Product::with('category')->latest()->paginate(10);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Products fetched successfully.',
+            'data' => $products
+        ]);
     }
 }
